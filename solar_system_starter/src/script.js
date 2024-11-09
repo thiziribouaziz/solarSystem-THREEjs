@@ -94,7 +94,27 @@ const planets = [
   },
 ];
 
+const planetMeshes = planets.map((planet) =>{
+   // create the Mesh
+     const planetMesh = new THREE.Mesh( sphereGeometry, planet.material )
+     planetMesh.scale.setScalar(planet.radius)
+     planetMesh.position.x = planet.distance
+  //  add the Mesh to the scene
+      scene.add(planetMesh)
+  //  Loop through each moon and create the moon 
+      planet.moons.forEach((moon) => {
+        const moonMesh = new THREE.Mesh( sphereGeometry, moonMaterial)
+        moonMesh.scale.setScalar(moon.radius)
+        moonMesh.position.x = moon.distance 
+        planetMesh.add(moonMesh)
+      });
+       return planetMesh
+});
 
+// add the light
+
+const ambientLight = new THREE.AmbientLight( 0xffffff, 0.5);
+scene.add(ambientLight);
 
 
 // initialize the camera
