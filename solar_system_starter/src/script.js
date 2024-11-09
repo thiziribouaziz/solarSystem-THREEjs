@@ -11,6 +11,9 @@ const scene = new THREE.Scene();
 // add textureLoader
 
 const textureLoader = new THREE.TextureLoader();
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+cubeTextureLoader.setPath('/textures/cubeMap/')
+
 
 // add textures
 
@@ -20,6 +23,17 @@ const venusTexture = textureLoader.load('/textures/2k_venus_surface.jpg');
 const earthTexture = textureLoader.load('/textures/2k_earth_daymap.jpg');
 const marsTexture = textureLoader.load('/textures/2k_mars.jpg');
 const moonTexture = textureLoader.load('/textures/2k_moon.jpg');
+
+const backgroundCubeMape = cubeTextureLoader.load( [
+				'px.png',
+				'nx.png',
+				'py.png',
+				'ny.png',
+				'pz.png',
+				'nz.png'
+			] )
+
+      scene.background = backgroundCubeMape
 
 // add Materials 
 const mercuryMaterial = new THREE.MeshStandardMaterial( { map: mercuryTexture } ); 
@@ -92,6 +106,14 @@ const planets = [
       },
     ],
   },
+  {
+    name: "ThiziriBouaziz",
+    radius: 0.7,
+    distance: 30,
+    speed: 0.01,
+    material: mercuryMaterial,
+    moons: [],
+  },
 ];
 
 const planetMeshes = planets.map((planet) =>{
@@ -112,9 +134,11 @@ const planetMeshes = planets.map((planet) =>{
 });
 
 // add the light
+  const ambientLight = new THREE.AmbientLight( 0xffffff, 0.001);
+  scene.add(ambientLight);
 
-const ambientLight = new THREE.AmbientLight( 0xffffff, 0.5);
-scene.add(ambientLight);
+  const pointLight = new THREE.PointLight(0xffffff, 0.001)
+  scene.add(pointLight)
 
 
 // initialize the camera
@@ -148,9 +172,17 @@ window.addEventListener("resize", () => {
 
 // render loop
 const renderloop = () => {
-  
   // add animation 
-  
+    planetMeshes.forEach((planet, planetIndex) =>{
+    planet.rotation.y += planets[planetIndex].speed
+    planet.position.x = Math.sin(planet.rotation.y) * planets[planetIndex].distance
+    planet.position.z = Math.cos(planet.rotation.y) * planets[planetIndex].distance
+    planet.children.forEach((moon, moonIndex) =>{
+    moon.rotation.y += planets[planetIndex].moons[moonIndex].speed
+    moon.position.x = Math.sin( moon.rotation.y) * planets[planetIndex].moons[moonIndex].distance
+    moon.position.z = Math.cos( moon.rotation.y) * planets[planetIndex].moons[moonIndex].distance
+    })
+   });
 
 
 
