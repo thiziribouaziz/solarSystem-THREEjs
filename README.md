@@ -1,1 +1,1 @@
-Live demo solarsystem-threejsproject.netlify.app
+Live demo (https://solarsystem-threejsproject.netlify.app/)
